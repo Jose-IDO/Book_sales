@@ -36,7 +36,10 @@ export default function AdminLoginPage() {
 
   return (
     <main className="mx-auto flex min-h-[70vh] max-w-md flex-col justify-center px-4 py-16">
-      <Link href="/" className="mb-8 text-sm text-[var(--accent)] hover:underline">
+      <Link
+        href="/"
+        className="mb-8 text-sm text-[var(--accent)] transition duration-300 hover:translate-x-[-2px] hover:text-[var(--ink)] hover:underline"
+      >
         ← Storefront
       </Link>
       <h1 className="font-serif text-2xl font-semibold text-[var(--ink)]">Admin sign in</h1>
@@ -52,7 +55,7 @@ export default function AdminLoginPage() {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
-            className="mt-1.5 w-full rounded-xl border border-[var(--border)] bg-white px-4 py-2.5 text-[var(--ink)] outline-none ring-[var(--accent)]/30 focus:ring-2"
+            className="mt-1.5 w-full rounded-xl border border-[var(--border)] bg-white px-4 py-2.5 text-[var(--ink)] outline-none transition duration-200 hover:border-[var(--accent)]/25 focus:ring-2 focus:ring-[var(--accent)]/30"
             autoComplete="current-password"
           />
         </label>
@@ -64,7 +67,7 @@ export default function AdminLoginPage() {
         <button
           type="submit"
           disabled={loading}
-          className="w-full rounded-full bg-[var(--ink)] py-3 text-sm font-semibold text-white hover:bg-[var(--accent)] disabled:opacity-50"
+          className="w-full rounded-full bg-[var(--ink)] py-3 text-sm font-semibold text-white shadow-md transition duration-300 hover:-translate-y-0.5 hover:bg-[var(--accent)] hover:shadow-lg disabled:translate-y-0 disabled:opacity-50"
         >
           {loading ? "Signing in…" : "Sign in"}
         </button>

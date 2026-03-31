@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { AuthorPhoto } from "@/app/components/AuthorPhoto";
+import { AuthorStrip } from "@/app/components/AuthorStrip";
+import { BookCoverPlaceholder } from "@/app/components/BookCoverPlaceholder";
 import { getStorefrontBookById, getStorefrontBooks } from "@/lib/storefront-data";
 import { formatPrice } from "@/lib/money";
 
@@ -20,20 +21,16 @@ export default async function BookPage({ params }: Props) {
     <main className="mx-auto max-w-3xl px-4 py-12 sm:px-6">
       <Link
         href="/"
-        className="mb-8 inline-block text-sm font-medium text-[var(--accent)] hover:underline"
+        className="mb-8 inline-block text-sm font-medium text-[var(--accent)] transition duration-300 hover:translate-x-[-2px] hover:text-[var(--ink)]"
       >
         ← Back to shop
       </Link>
 
-      <div className="flex flex-col gap-8 sm:flex-row sm:items-start">
-        <div className="mx-auto shrink-0 sm:mx-0">
-          <AuthorPhoto
-            alt={`Portrait of ${book.author}`}
-            width={280}
-            height={360}
-            priority
-            className="h-auto max-h-[22rem] w-48 rounded-2xl border border-[var(--border)] object-cover shadow-sm sm:w-56"
-          />
+      <AuthorStrip authorName={book.author} />
+
+      <div className="flex flex-col gap-10 sm:flex-row sm:items-start sm:gap-12">
+        <div className="mx-auto shrink-0 sm:mx-0 sm:w-[min(100%,15rem)]">
+          <BookCoverPlaceholder title={book.title} />
         </div>
         <div className="min-w-0 flex-1">
           <p className="text-xs font-medium uppercase tracking-wider text-[var(--ink)]/45">
@@ -48,7 +45,7 @@ export default async function BookPage({ params }: Props) {
         </div>
       </div>
 
-      <div className="mt-8 rounded-2xl border border-[var(--border)] bg-[var(--card)] p-6 sm:p-8">
+      <div className="mt-10 rounded-2xl border border-[var(--border)] bg-[var(--card)] p-6 shadow-sm transition duration-300 ease-out hover:border-[var(--accent)]/25 hover:shadow-lg sm:p-8">
         <h2 className="text-sm font-semibold uppercase tracking-wide text-[var(--ink)]/55">
           Abstract
         </h2>
@@ -69,7 +66,7 @@ export default async function BookPage({ params }: Props) {
       <div className="mt-10 flex flex-wrap gap-4">
         <Link
           href={`/reserve/${book.id}`}
-          className="inline-flex items-center justify-center rounded-full bg-[var(--accent)] px-8 py-3.5 text-sm font-semibold text-white shadow-sm transition hover:bg-[var(--ink)]"
+          className="inline-flex items-center justify-center rounded-full bg-[var(--accent)] px-8 py-3.5 text-sm font-semibold text-white shadow-md transition duration-300 ease-out hover:-translate-y-0.5 hover:bg-[var(--ink)] hover:shadow-lg hover:shadow-[var(--accent)]/25 active:translate-y-0"
         >
           Reserve this book
         </Link>

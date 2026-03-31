@@ -79,7 +79,7 @@ export function ReserveForm({ book }: { book: Book }) {
 
   if (done) {
     return (
-      <div className="rounded-2xl border border-[var(--border)] bg-[var(--card)] p-8 shadow-sm sm:p-10">
+      <div className="rounded-2xl border border-[var(--border)] bg-[var(--card)] p-8 shadow-sm transition duration-300 hover:border-[var(--accent)]/20 hover:shadow-md sm:p-10">
         <div className="mx-auto max-w-md text-center">
           <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-emerald-100 text-emerald-700">
             <svg className="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -104,7 +104,7 @@ export function ReserveForm({ book }: { book: Book }) {
           </p>
           <Link
             href="/"
-            className="mt-8 inline-block rounded-full border border-[var(--border)] bg-white px-6 py-2.5 text-sm font-medium text-[var(--ink)] hover:border-[var(--accent-muted)]"
+            className="mt-8 inline-block rounded-full border border-[var(--border)] bg-white px-6 py-2.5 text-sm font-medium text-[var(--ink)] transition duration-300 hover:-translate-y-0.5 hover:border-[var(--accent)]/40 hover:shadow-md"
           >
             Back to shop
           </Link>
@@ -116,7 +116,7 @@ export function ReserveForm({ book }: { book: Book }) {
   return (
     <form
       onSubmit={onSubmit}
-      className="rounded-2xl border border-[var(--border)] bg-[var(--card)] p-6 shadow-sm sm:p-8"
+      className="rounded-2xl border border-[var(--border)] bg-[var(--card)] p-6 shadow-sm transition duration-300 hover:border-[var(--accent)]/15 hover:shadow-md sm:p-8"
     >
       <p className="text-xs font-medium uppercase tracking-wider text-[var(--ink)]/45">
         ISBN {book.isbn}
@@ -147,7 +147,7 @@ export function ReserveForm({ book }: { book: Book }) {
             required
             value={buyerName}
             onChange={(e) => setBuyerName(e.target.value)}
-            className="mt-1.5 w-full rounded-xl border border-[var(--border)] bg-white px-4 py-2.5 text-[var(--ink)] outline-none ring-[var(--accent)]/30 focus:ring-2"
+            className="mt-1.5 w-full rounded-xl border border-[var(--border)] bg-white px-4 py-2.5 text-[var(--ink)] outline-none transition duration-200 hover:border-[var(--accent)]/25 focus:border-[var(--accent)]/40 focus:ring-2 focus:ring-[var(--accent)]/30"
             autoComplete="name"
           />
         </label>
@@ -158,7 +158,7 @@ export function ReserveForm({ book }: { book: Book }) {
             type="email"
             value={buyerEmail}
             onChange={(e) => setBuyerEmail(e.target.value)}
-            className="mt-1.5 w-full rounded-xl border border-[var(--border)] bg-white px-4 py-2.5 text-[var(--ink)] outline-none ring-[var(--accent)]/30 focus:ring-2"
+            className="mt-1.5 w-full rounded-xl border border-[var(--border)] bg-white px-4 py-2.5 text-[var(--ink)] outline-none transition duration-200 hover:border-[var(--accent)]/25 focus:border-[var(--accent)]/40 focus:ring-2 focus:ring-[var(--accent)]/30"
             autoComplete="email"
           />
         </label>
@@ -168,7 +168,7 @@ export function ReserveForm({ book }: { book: Book }) {
             value={message}
             onChange={(e) => setMessage(e.target.value)}
             rows={2}
-            className="mt-1.5 w-full rounded-xl border border-[var(--border)] bg-white px-4 py-2.5 text-[var(--ink)] outline-none ring-[var(--accent)]/30 focus:ring-2"
+            className="mt-1.5 w-full rounded-xl border border-[var(--border)] bg-white px-4 py-2.5 text-[var(--ink)] outline-none transition duration-200 hover:border-[var(--accent)]/25 focus:border-[var(--accent)]/40 focus:ring-2 focus:ring-[var(--accent)]/30"
             placeholder="Anything we should know?"
           />
         </label>
@@ -197,7 +197,7 @@ export function ReserveForm({ book }: { book: Book }) {
       <button
         type="submit"
         disabled={submitting}
-        className="mt-8 w-full rounded-full bg-[var(--accent)] py-3.5 text-sm font-semibold text-white transition hover:bg-[var(--ink)] disabled:opacity-50"
+        className="mt-8 w-full rounded-full bg-[var(--accent)] py-3.5 text-sm font-semibold text-white shadow-md transition duration-300 hover:-translate-y-0.5 hover:bg-[var(--ink)] hover:shadow-lg disabled:translate-y-0 disabled:opacity-50 disabled:shadow-md"
       >
         {submitting ? "Submitting…" : staticSite ? "Open email to complete reservation" : "Submit reservation"}
       </button>

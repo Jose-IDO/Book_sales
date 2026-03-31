@@ -20,7 +20,7 @@ export default async function ReservePage({ params }: Props) {
     <main className="mx-auto max-w-lg px-4 py-12 sm:px-6">
       <Link
         href={`/books/${book.id}`}
-        className="mb-8 inline-block text-sm font-medium text-[var(--accent)] hover:underline"
+        className="mb-8 inline-block text-sm font-medium text-[var(--accent)] transition duration-300 hover:translate-x-[-2px] hover:text-[var(--ink)] hover:underline"
       >
         ← Book details
       </Link>
