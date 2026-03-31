@@ -1,5 +1,7 @@
 import Link from "next/link";
 
+const staticSite = process.env.NEXT_PUBLIC_DEPLOY_MODE === "static";
+
 export function SiteHeader() {
   return (
     <header className="sticky top-0 z-40 border-b border-[var(--border)] bg-[var(--paper)]/90 backdrop-blur-md">
@@ -11,12 +13,14 @@ export function SiteHeader() {
           <Link href="/" className="text-[var(--ink)]/80 hover:text-[var(--accent)]">
             Shop
           </Link>
-          <Link
-            href="/admin/login"
-            className="text-[var(--ink)]/50 hover:text-[var(--ink)]"
-          >
-            Admin
-          </Link>
+          {!staticSite && (
+            <Link
+              href="/admin/login"
+              className="text-[var(--ink)]/50 hover:text-[var(--ink)]"
+            >
+              Admin
+            </Link>
+          )}
         </nav>
       </div>
     </header>

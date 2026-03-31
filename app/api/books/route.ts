@@ -10,8 +10,8 @@ export async function GET() {
       title: true,
       author: true,
       description: true,
+      isbn: true,
       priceCents: true,
-      coverImageUrl: true,
       stock: true,
     },
   });

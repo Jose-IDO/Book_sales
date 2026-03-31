@@ -12,8 +12,8 @@ export async function GET(_req: Request, { params }: Params) {
       title: true,
       author: true,
       description: true,
+      isbn: true,
       priceCents: true,
-      coverImageUrl: true,
       stock: true,
     },
   });

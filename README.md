@@ -29,8 +29,18 @@ To learn more about Next.js, take a look at the following resources:
 
 You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
 
-## Deploy on Vercel
+## GitHub Pages (static storefront)
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+GitHub Pages only serves static files. This repo includes [`.github/workflows/github-pages.yml`](.github/workflows/github-pages.yml), which publishes the catalog and banking details and opens a **mailto** draft for reservations (no file upload to your server).
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+1. In the repo: **Settings → Pages → Build and deployment → Source: GitHub Actions**.
+2. **Settings → Secrets and variables → Actions → Variables**: add **`RESERVATION_EMAIL`** (the inbox that receives reservation emails).
+3. Push to **`main`** (or **`master`**). The site will be at `https://<user>.github.io/<repo>/` (for example `https://jose-ido.github.io/Book_sales/`).
+
+Re-seed the database so the book id matches the static catalog: `npm run db:seed` (uses id `book-sales-catalog` from `lib/catalog.ts`).
+
+For **uploaded proof files**, **admin login**, and **email from the server**, deploy the full app to [Vercel](https://vercel.com/new) or another Node host instead.
+
+## Deploy on Vercel (full app)
+
+Connect this repo to Vercel for API routes, Prisma/SQLite (or move to Postgres), and admin. See [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying).

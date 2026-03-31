@@ -15,9 +15,7 @@ type ReservationRow = {
 };
 
 function money(cents: number) {
-  return new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(
-    cents / 100
-  );
+  return new Intl.NumberFormat("en-ZA", { style: "currency", currency: "ZAR" }).format(cents / 100);
 }
 
 export function AdminDashboard() {
@@ -134,7 +132,9 @@ export function AdminDashboard() {
                 <td className="px-4 py-3">
                   <p className="font-medium text-[var(--ink)]">{r.book.title}</p>
                   <p className="text-xs text-[var(--ink)]/50">{r.book.author}</p>
-                  <p className="mt-1 text-xs text-[var(--ink)]/60">{money(r.book.priceCents)}</p>
+                  {r.book.priceCents > 0 && (
+                    <p className="mt-1 text-xs text-[var(--ink)]/60">{money(r.book.priceCents)}</p>
+                  )}
                 </td>
                 <td className="px-4 py-3">
                   <p className="text-[var(--ink)]">{r.buyerName}</p>
