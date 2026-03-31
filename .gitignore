@@ -17,6 +17,9 @@
 /.next/
 /out/
 
+# local mirror of static export (docs/ is committed for GitHub Pages)
+/dist/
+
 # production
 /build
 
