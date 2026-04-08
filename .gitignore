@@ -37,6 +37,10 @@ yarn-error.log*
 .env*
 !.env.example
 
+# Firebase / GCP keys (never commit)
+*firebase-adminsdk*.json
+serviceAccount*.json
+
 # uploads & local db
 /uploads
 /prisma/*.db

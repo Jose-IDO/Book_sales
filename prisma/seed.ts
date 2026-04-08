@@ -11,6 +11,7 @@ async function main() {
   await prisma.book.create({
     data: {
       id: BOOK_FIXED_ID,
+      registryEightDigitId: "38475629",
       title: book.title,
       author: book.author,
       isbn: book.isbn,

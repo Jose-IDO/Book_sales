@@ -1,0 +1,20 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // User profiles: each signed-in user may read/write only their own document.
+    match /users/{userId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+
+    // Canonical list of book IDs and admin-only metadata. Clients must not read or write.
+    // Access is gated on a custom claim: admin token must be set via Admin SDK (see docs).
+    match /bookRegistry/{bookId} {
+      allow read, write: if request.auth != null && request.auth.token.admin == true;
+    }
+
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

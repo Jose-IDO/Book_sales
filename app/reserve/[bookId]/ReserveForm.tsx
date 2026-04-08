@@ -1,8 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { PAYMENT_BANKING } from "@/lib/payment-details";
+import { isFirebaseClientConfigured } from "@/lib/firebase/client";
+import { useFirebaseAuth } from "@/app/components/FirebaseAuthProvider";
 
 type Book = { id: string; title: string; author: string; priceCents: number; isbn: string };
 
@@ -14,6 +16,7 @@ function formatPrice(cents: number) {
 }
 
 export function ReserveForm({ book }: { book: Book }) {
+  const { user, loading: authLoading } = useFirebaseAuth();
   const [buyerName, setBuyerName] = useState("");
   const [buyerEmail, setBuyerEmail] = useState("");
   const [message, setMessage] = useState("");
@@ -21,6 +24,14 @@ export function ReserveForm({ book }: { book: Book }) {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [done, setDone] = useState(false);
+
+  useEffect(() => {
+    if (user?.email) {
+      setBuyerEmail(user.email);
+    }
+  }, [user?.email]);
+
+  const requireShopAuth = !staticSite && isFirebaseClientConfigured();
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -63,7 +74,13 @@ export function ReserveForm({ book }: { book: Book }) {
       if (message.trim()) fd.set("message", message.trim());
       fd.set("proof", file);
 
-      const res = await fetch("/api/reservations", { method: "POST", body: fd });
+      const headers: HeadersInit = {};
+      if (user) {
+        const token = await user.getIdToken();
+        headers.Authorization = `Bearer ${token}`;
+      }
+
+      const res = await fetch("/api/reservations", { method: "POST", headers, body: fd });
       const data = await res.json().catch(() => ({}));
       if (!res.ok) {
         setError(typeof data.error === "string" ? data.error : "Something went wrong.");
@@ -75,6 +92,37 @@ export function ReserveForm({ book }: { book: Book }) {
     } finally {
       setSubmitting(false);
     }
+  }
+
+  if (!staticSite && requireShopAuth && authLoading) {
+    return (
+      <div className="rounded-2xl border border-[var(--border)] bg-[var(--card)] p-8 text-center text-[var(--ink)]/60 shadow-sm">
+        Checking your account…
+      </div>
+    );
+  }
+
+  if (!staticSite && requireShopAuth && !user) {
+    return (
+      <div className="rounded-2xl border border-[var(--border)] bg-[var(--card)] p-8 shadow-sm sm:p-10">
+        <h2 className="font-serif text-xl font-semibold text-[var(--ink)]">Sign in to reserve</h2>
+        <p className="mt-3 text-sm text-[var(--ink)]/65">
+          We verify your identity with Firebase before you upload payment proof. Use the same email you will enter on the form.
+        </p>
+        <Link
+          href="/login"
+          className="mt-6 inline-block rounded-full bg-[var(--accent)] px-6 py-2.5 text-sm font-semibold text-white shadow-md transition hover:bg-[var(--ink)]"
+        >
+          Sign in or create account
+        </Link>
+        <Link
+          href="/"
+          className="mt-4 block text-center text-sm text-[var(--ink)]/50 hover:text-[var(--ink)]"
+        >
+          ← Back to shop
+        </Link>
+      </div>
+    );
   }
 
   if (done) {
@@ -158,7 +206,8 @@ export function ReserveForm({ book }: { book: Book }) {
             type="email"
             value={buyerEmail}
             onChange={(e) => setBuyerEmail(e.target.value)}
-            className="mt-1.5 w-full rounded-xl border border-[var(--border)] bg-white px-4 py-2.5 text-[var(--ink)] outline-none transition duration-200 hover:border-[var(--accent)]/25 focus:border-[var(--accent)]/40 focus:ring-2 focus:ring-[var(--accent)]/30"
+            readOnly={Boolean(requireShopAuth && user?.email)}
+            className="mt-1.5 w-full rounded-xl border border-[var(--border)] bg-white px-4 py-2.5 text-[var(--ink)] outline-none transition duration-200 read-only:bg-[var(--paper)]/80 hover:border-[var(--accent)]/25 focus:border-[var(--accent)]/40 focus:ring-2 focus:ring-[var(--accent)]/30"
             autoComplete="email"
           />
         </label>

@@ -9,6 +9,8 @@ datasource db {
 
 model Book {
   id          String        @id @default(cuid())
+  /** 8-digit string for Firestore bookRegistry / bookReserve keys (unique). */
+  registryEightDigitId String? @unique
   title       String
   author      String
   description String
@@ -24,6 +26,8 @@ model Reservation {
   id          String            @id @default(cuid())
   bookId      String
   book        Book              @relation(fields: [bookId], references: [id], onDelete: Cascade)
+  /** Firebase Auth uid when reservation was created with a verified ID token. */
+  firebaseUid String?
   buyerName   String
   buyerEmail  String
   message     String?

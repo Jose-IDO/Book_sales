@@ -10,6 +10,10 @@ npm run dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
+## Documentation
+
+- **[Firebase setup (login & profiles)](docs/FIREBASE_SETUP.md)** — step-by-step Firebase Console configuration, rules, env vars, and integration notes.
+
 ## GitHub Pages (static site from `/docs`)
 
 GitHub Pages **cannot** run this app’s API or database. It only serves **static HTML/JS**. This repo builds that static site into **`docs/`** (and a local-only **`dist/`** copy) so you can use **Deploy from a branch**—no GitHub Actions required.

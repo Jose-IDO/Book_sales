@@ -2,6 +2,9 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { isAdminAuthenticated } from "@/lib/auth";
 import { ReservationStatus } from "@prisma/client";
+import { allocateRegistryEightDigitId } from "@/lib/registry-eight-digit";
+import { syncApprovedReservationToFirestore } from "@/lib/firestore-sync";
+import { isFirebaseAdminConfigured } from "@/lib/firebase/server-ready";
 
 type Params = { params: Promise<{ id: string }> };
 
@@ -48,7 +51,37 @@ export async function PATCH(req: Request, { params }: Params) {
         });
       }
     }
+
+    if (becomingApproved && !reservation.book.registryEightDigitId) {
+      const reg = await allocateRegistryEightDigitId(tx);
+      await tx.book.update({
+        where: { id: reservation.bookId },
+        data: { registryEightDigitId: reg },
+      });
+    }
   });
+
+  if (becomingApproved && isFirebaseAdminConfigured()) {
+    const book = await prisma.book.findUnique({
+      where: { id: reservation.bookId },
+      select: { registryEightDigitId: true, title: true },
+    });
+    const resv = await prisma.reservation.findUnique({
+      where: { id },
+      select: { firebaseUid: true },
+    });
+    if (book?.registryEightDigitId) {
+      try {
+        await syncApprovedReservationToFirestore({
+          firebaseUid: resv?.firebaseUid ?? null,
+          registryEightDigitId: book.registryEightDigitId,
+          bookTitle: book.title,
+        });
+      } catch (e) {
+        console.error("[firestore] sync on approve failed:", e);
+      }
+    }
+  }
 
   return NextResponse.json({ ok: true });
 }

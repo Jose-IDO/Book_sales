@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { AuthNav } from "@/app/components/AuthNav";
 
 const staticSite = process.env.NEXT_PUBLIC_DEPLOY_MODE === "static";
 
@@ -19,6 +20,7 @@ export function SiteHeader() {
           >
             Shop
           </Link>
+          <AuthNav />
           {!staticSite && (
             <Link
               href="/admin/login"

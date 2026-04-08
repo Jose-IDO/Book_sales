@@ -6,6 +6,8 @@ import {
   saveProofFile,
 } from "@/lib/uploads";
 import { sendAdminReservationNotice } from "@/lib/email";
+import { verifyIdToken } from "@/lib/firebase/admin";
+import { isFirebaseAdminConfigured } from "@/lib/firebase/server-ready";
 
 export const runtime = "nodejs";
 
@@ -31,6 +33,41 @@ export async function POST(req: Request) {
   }
   if (!buyerEmail.includes("@")) {
     return NextResponse.json({ error: "Valid email required" }, { status: 400 });
+  }
+
+  let firebaseUid: string | null = null;
+  if (isFirebaseAdminConfigured()) {
+    const header = req.headers.get("authorization");
+    const match = header?.match(/^Bearer\s+(\S+)/i);
+    const token = match?.[1];
+    if (!token) {
+      return NextResponse.json(
+        { error: "Sign in required. Open Sign in, then try again." },
+        { status: 401 }
+      );
+    }
+    try {
+      const decoded = await verifyIdToken(token);
+      const tokenEmail = decoded.email?.toLowerCase().trim();
+      if (!tokenEmail) {
+        return NextResponse.json(
+          { error: "Your account must have an email address to reserve." },
+          { status: 400 }
+        );
+      }
+      if (tokenEmail !== buyerEmail.toLowerCase().trim()) {
+        return NextResponse.json(
+          { error: "Email must match your signed-in account." },
+          { status: 403 }
+        );
+      }
+      firebaseUid = decoded.uid;
+    } catch {
+      return NextResponse.json(
+        { error: "Invalid or expired session. Sign in again." },
+        { status: 401 }
+      );
+    }
   }
 
   const book = await prisma.book.findFirst({
@@ -67,6 +104,7 @@ export async function POST(req: Request) {
   const reservation = await prisma.reservation.create({
     data: {
       bookId,
+      firebaseUid,
       buyerName,
       buyerEmail,
       message,
