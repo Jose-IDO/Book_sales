@@ -142,8 +142,8 @@ Dependencies: **`firebase`**, **`firebase-admin`** (see `package.json`).
 ### Reservations + Firestore sync (implemented)
 
 - **Shop sign-in:** `/login` (email/password). Header shows **Sign in** / account / **Sign out** when `NEXT_PUBLIC_FIREBASE_*` is set.
-- **Reserve flow:** On the full Node app (not static export), if **Admin SDK** env is set (`FIREBASE_SERVICE_ACCOUNT_JSON` or `GOOGLE_APPLICATION_CREDENTIALS`), `POST /api/reservations` requires `Authorization: Bearer <Firebase ID token>`. The form email must match the token’s email; Prisma stores `firebaseUid`.
-- **If Admin SDK env is missing:** reservations still work **without** Firebase login (local dev).
+- **Reserve flow:** On the full Node app (not static export), when **both** the **Admin SDK** env (`FIREBASE_SERVICE_ACCOUNT_JSON` or `GOOGLE_APPLICATION_CREDENTIALS`) **and** `NEXT_PUBLIC_FIREBASE_API_KEY` are set, `POST /api/reservations` requires `Authorization: Bearer <Firebase ID token>`. The form email must match the token’s email; Prisma stores `firebaseUid`.
+- **If either is missing:** reservations work **without** Firebase login (useful for local dev without full Firebase wiring).
 - **Admin approve:** When a reservation moves to **APPROVED**, the server ensures the book has `registryEightDigitId`, then writes **`bookRegistry/{id}`** and **`users/{firebaseUid}.bookReserve[id]=1`** when Firestore is configured (see `lib/firestore-sync.ts`).
 
 **Production:** set **both** client (`NEXT_PUBLIC_*`) and server (service account) env vars on your host so buyers must sign in and Firestore stays in sync.
