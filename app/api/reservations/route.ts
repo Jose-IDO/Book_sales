@@ -7,7 +7,7 @@ import {
 } from "@/lib/uploads";
 import { sendAdminReservationNotice } from "@/lib/email";
 import { verifyIdToken } from "@/lib/firebase/admin";
-import { isFirebaseAdminConfigured } from "@/lib/firebase/server-ready";
+import { isReservationFirebaseAuthEnforced } from "@/lib/firebase/server-ready";
 
 export const runtime = "nodejs";
 
@@ -36,7 +36,7 @@ export async function POST(req: Request) {
   }
 
   let firebaseUid: string | null = null;
-  if (isFirebaseAdminConfigured()) {
+  if (isReservationFirebaseAuthEnforced()) {
     const header = req.headers.get("authorization");
     const match = header?.match(/^Bearer\s+(\S+)/i);
     const token = match?.[1];
